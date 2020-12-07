@@ -1,5 +1,7 @@
 {
   "name": "tube_calculator",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

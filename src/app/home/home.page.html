@@ -1,20 +1,99 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title class="ion-text-center">{{ apli.titulo }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-row>
+    <ion-col>
+      <ion-label>V primario: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.voltajeInDc" (ngModelChange)="onChange()" clear-on-edit="true">
+      </ion-input>
+      <ion-toggle #tgVp slot="end" checked></ion-toggle>
+    </ion-col>
+  </ion-row>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-label>V p-p: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.voltajeOutPp" (ngModelChange)="onChange()"
+        clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+    <ion-col>
+      <ion-label>V rms: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.voltajeOutRms" (ngModelChange)="onChange()"
+        clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-label>Zi: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.impedanciaIn" (ngModelChange)="onChange()"
+        clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+    <ion-col>
+      <ion-label>Zo: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.impedanciaOut" (ngModelChange)="onChange()"
+        clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-label>RT: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.relacionTrans" (ngModelChange)="onChange()"
+        clear-on-edit="true">
+      </ion-input>
+      <ion-toggle #tgRt slot="end" checked></ion-toggle>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-label>esp.P: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.turn1" (ngModelChange)="onChange()" clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+    <ion-col>
+      <ion-label>esp.S: </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.turn2" (ngModelChange)="onChange()" clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-label>P(rms): </ion-label>
+      <ion-input type="number" [(ngModel)]="this.amp.potenciaRms" (ngModelChange)="onChange()" clear-on-edit="true">
+      </ion-input>
+    </ion-col>
+  </ion-row>
+
+
+
+
+
+
+
+  <!--  
+
+  <ion-item>
+    <ion-checkbox slot="start" checked></ion-checkbox>
+    <ion-label>Checkbox</ion-label>
+  </ion-item>
+
+  <div>
+    <ion-button (click)="calcular()" shape="round" color="warning">clientes</ion-button>
+  </div> -->
+
+
+
+
+<!-- <ion-buttons slot="start">
+  <ion-back-button defaultHref="home"></ion-back-button>
+</ion-buttons> -->
