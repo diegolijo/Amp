@@ -27,8 +27,8 @@ export class TubeAmp_a {
 
 
     public getPOuts() {
-        this.Pp_Rms();
-        this.zTs();
+     //   this.Pp_Rms();
+      //  this.zTs();
         // hay altavoz
         if (this.impedanciaOut != 0) {
             // hay tension secundario trafo
