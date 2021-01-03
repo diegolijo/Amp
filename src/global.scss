@@ -24,3 +24,37 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.botonesModo {
+    max-width: max-content;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+
+}
+
+.paddingV2 {
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+}
+.paddingV5 {
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+.paddingV10 {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+.paddingH2 {
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+}
+.paddingH5 {
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+.paddingH10 {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}

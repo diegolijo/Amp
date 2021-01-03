@@ -6,6 +6,18 @@ import { Injectable } from '@angular/core';
 export class TubeAmp_a {
 
 
+    public VI_PICO = "vip";
+    public VO_RNS = "vorms";
+    public VO_PICO_PICO = "vopp";
+
+    public CALCULAR_V = "V"
+    public CALCULAR_R = "R"
+
+
+
+    public calculaR: boolean = false;
+    public calculaV: boolean = true;
+    public modo: string = this.CALCULAR_V;
 
     public voltajeInTns: number;
     public voltajeInPp: number;
@@ -23,59 +35,7 @@ export class TubeAmp_a {
 
     constructor() {
         this.reset();
-    }
-
-
-    public getPOuts() {
-     //   this.Pp_Rms();
-      //  this.zTs();
-        // hay altavoz
-        if (this.impedanciaOut != 0) {
-            // hay tension secundario trafo
-            if (this.voltajeOutRms != 0) {
-                this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));
-                //si hay z primario trafo
-            } else if (this.impedanciaIn != 0) {
-                // hay pot de salida
-            } else if (this.potenciaRms != 0) {
-                this.voltajeOutRms = Math.sqrt(this.potenciaRms * this.impedanciaOut);
-
-            }
-            // no hay altavoz    
-        } else {
-
-            // hay tension secundario trafo
-            if (this.voltajeOutRms != 0 || this.voltajeOutRms) {
-                //si hay z primario trafo
-            } else if (this.impedanciaIn != 0) {
-            }
-        }
-        return this;
-    }
-
-    private Pp_Rms() {
-        if (this.voltajeOutPp != 0) {
-            this.voltajeOutRms = this.voltajeOutRms / this.RMS_FACTOR;
-        } else if (this.voltajeOutRms != 0) {
-            this.voltajeOutRms = this.voltajeOutRms * this.RMS_FACTOR;
-        }
-        if (this.voltajeInDc != 0) {
-            this.voltajeInPp = this.voltajeInDc / 2;
-        } else if (this.voltajeInPp != 0) {
-            this.voltajeInDc = this.voltajeInPp * 2;
-        }
-    }
-
-    private zTs() {
-        if (this.impedanciaOut != 0 && this.relacionTrans != 0) {
-            this.impedanciaIn = (Math.pow(this.relacionTrans, 2) * this.impedanciaOut);
-        } else if (this.impedanciaIn != 0 && this.impedanciaOut != 0) {
-            this.relacionTrans = Math.sqrt(this.impedanciaOut / this.impedanciaIn);
-        } else if (this.impedanciaIn != 0 && this.relacionTrans != 0) {
-            this.impedanciaOut = this.impedanciaIn / this.relacionTrans;
-        } else if (this.impedanciaOut != 0 && this.voltajeOutPp != 0 && this.voltajeInPp != 0) {
-            this.relacionTrans = this.voltajeInPp / this.voltajeOutPp;
-        }
+        document.body.setAttribute('data-theme', 'dark');
     }
 
     public reset() {
@@ -90,6 +50,100 @@ export class TubeAmp_a {
         this.relacionTrans = 0;
         this.turn1 = 0;
         this.turn2 = 0;
+    }
+
+    /*                   
+                    this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));         
+                    this.voltajeOutRms = Math.sqrt(this.potenciaRms * this.impedanciaOut);              
+    */
+
+
+    public toggleVR(k: any) {
+        switch (k) {
+            case this.CALCULAR_V:
+                this.calculaV = true;
+                this.calculaR = false;
+                this.modo = this.CALCULAR_V;
+                this.getPOuts()
+                break;
+            case this.CALCULAR_R:
+                this.calculaV = false;
+                this.calculaR = true;
+                this.modo = this.CALCULAR_R;
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
+
+    public setV(p: string, v: number) {
+        switch (p) {
+            case this.VI_PICO:
+                break;
+            case this.VO_PICO_PICO:
+                this.voltajeOutRms = this.voltajeOutPp / this.RMS_FACTOR;
+                break;
+            case this.VO_RNS:
+                this.voltajeOutPp = this.voltajeOutRms * this.RMS_FACTOR;
+                break;
+            default:
+                break;
+        }
+        this.getPOuts()
+    }
+
+
+
+    public onChangeP() {
+
+    }
+
+    public onChangeSEC() {
+
+    }
+
+    public onChangePRI() {
+
+    }
+
+    public onChangeRT() {
+
+    }
+    public onChangeZO() {
+
+    }
+    public onChangeZI() {
+
+    }
+
+
+    public getPOuts() {
+        switch (this.modo) {
+            case this.CALCULAR_V:
+                if (this.impedanciaOut != 0) {
+                    if (this.impedanciaIn != 0) {
+                        this.relacionTrans = Math.sqrt(this.impedanciaIn / this.impedanciaOut);
+                        this.voltajeInDc = this.relacionTrans * this.voltajeOutPp;
+                    }
+                    // hay tension secundario trafo
+                    if (this.voltajeOutRms != 0) {
+                        this.potenciaRms = (Math.pow(this.voltajeOutRms, 2) / this.impedanciaOut);
+                        //si hay z primario trafo  calculamos la tension entreda necesaria para satisfacer la relacionon de espiras Zs
+                    }
+                }
+                break;
+            case this.CALCULAR_R:
+                if (this.impedanciaIn != 0 && this.impedanciaOut != 0) {
+                    this.relacionTrans = Math.sqrt(this.impedanciaIn / this.impedanciaOut);
+                }
+                break;
+            default:
+                break;
+        }
+        return this;
     }
 
 

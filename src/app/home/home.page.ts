@@ -23,10 +23,11 @@ export class HomePage {
     this.amp = tubeAmp;
   }
 
-  onChange() {
-    this.amp =  this.amp.getPOuts();
-  }
 
+
+
+
+  
 }
 
 
