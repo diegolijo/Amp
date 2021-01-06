@@ -15,8 +15,8 @@ export class TubeAmp_a {
 
 
 
-    public calculaR: boolean = false;
-    public calculaV: boolean = true;
+    public calculaR: boolean = true;
+    public calculaV: boolean = false;
     public modo: string = this.CALCULAR_V;
 
     public voltajeInTns: number;
@@ -35,27 +35,68 @@ export class TubeAmp_a {
 
     constructor() {
         this.reset();
-        document.body.setAttribute('data-theme', 'dark');
+
     }
 
     public reset() {
+        this.relacionTrans = 20;
+        this.turn1 = 750;
+        this.turn2 = 75;
+
+
+
         this.voltajeInTns = 0;
-        this.voltajeInPp = 0;
-        this.voltajeInDc = 0;
-        this.voltajeOutPp = 0;
-        this.voltajeOutRms = 0;
+        this.voltajeInPp = 1;
+        this.voltajeInDc = 1 / 2;
+        this.voltajeOutPp = 1 * this.RMS_FACTOR;
+        this.voltajeOutRms = 1;
         this.potenciaRms = 0;
-        this.impedanciaIn = 0;
-        this.impedanciaOut = 0;
-        this.relacionTrans = 0;
-        this.turn1 = 0;
-        this.turn2 = 0;
+        this.impedanciaIn = 5000;
+        this.impedanciaOut = 8;
     }
 
     /*                   
                     this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));         
                     this.voltajeOutRms = Math.sqrt(this.potenciaRms * this.impedanciaOut);              
     */
+
+
+    public setT1() {
+        this.turn1 = this.turn2 * this.relacionTrans;
+        this.turn1 = Math.trunc(this.turn1);
+    }
+
+    public setT2() {
+        this.turn2 = this.turn1 / this.relacionTrans;
+        this.turn2 = Math.trunc(this.turn2);
+    }
+
+    public setRT() {
+        this.relacionTrans = this.turn1 / this.turn2;
+        this.relacionTrans = Math.trunc(this.relacionTrans);
+    }
+
+    public setRtZ(){
+        this.relacionTrans = Math.sqrt(this.impedanciaIn / this.impedanciaOut);
+        this.relacionTrans = Math.trunc(this.relacionTrans);
+    }
+
+    public setT1z(){
+        this.turn1 = this.turn2 * this.relacionTrans;
+        this.turn1 = Math.trunc(this.turn1);
+    }
+    public setT2z(){
+        this.turn2 = this.turn1 / this.relacionTrans;
+        this.turn2 = Math.trunc(this.turn2);
+    }
+
+    public setZi(){
+        this.impedanciaIn = this.impedanciaOut * this.relacionTrans * this.relacionTrans;
+        this.impedanciaIn = Math.trunc(this.impedanciaIn);
+    }
+    
+
+
 
 
     public toggleVR(k: any) {
@@ -78,7 +119,7 @@ export class TubeAmp_a {
 
 
 
-
+// cd  viejo  
     public setV(p: string, v: number) {
         switch (p) {
             case this.VI_PICO:
@@ -97,27 +138,6 @@ export class TubeAmp_a {
 
 
 
-    public onChangeP() {
-
-    }
-
-    public onChangeSEC() {
-
-    }
-
-    public onChangePRI() {
-
-    }
-
-    public onChangeRT() {
-
-    }
-    public onChangeZO() {
-
-    }
-    public onChangeZI() {
-
-    }
 
 
     public getPOuts() {

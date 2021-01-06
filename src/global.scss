@@ -34,27 +34,106 @@
 
 }
 
-.paddingV2 {
-    padding-bottom: 0.2em;
-    padding-top: 0.2em;
+
+
+//--------------------------------------------------------
+
+// pintamos el texto completo de los ion-select
+.selectFull {
+    text-align: right !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
 }
-.paddingV5 {
-    padding-bottom: 0.5em;
-    padding-top: 0.5em;
+
+.title {
+    font-size: 1.1em !important;
+    text-align: center !important;
+    white-space: pre-line !important;
+    display: block !important;
+    font-weight: bold !important;
 }
+
+.smallLabel {
+    font-size: 0.8em !important;
+    text-align: center !important;
+    white-space: pre-line !important;
+    display: block !important;
+    font-weight: bold !important;
+}
+
+.smallFont {
+    font-size: 0.6em;
+}
+
+.mediumFont {
+    font-size: 0.8em;
+}
+
+.bigFont {
+    font-size: 1em;
+}
+
+.fontBold {
+    font-weight: bold !important;
+}
+
+//salto de linea en el texto cuando no cabe en la pantalla
+.textoCompleto {
+    display: block !important;
+    white-space: pre-line !important;
+}
+
+.textRightAlign {
+    text-align: right !important;
+}
+
+.textCenter {
+    text-align: center;
+}
+
 .paddingV10 {
-    padding-bottom: 1em;
-    padding-top: 1em;
+    padding-bottom: 1em !important;
+    padding-top: 1em !important;
 }
-.paddingH2 {
-    padding-bottom: 0.2em;
-    padding-top: 0.2em;
+
+.paddingT10 {
+    padding-top: 1em !important;
 }
-.paddingH5 {
-    padding-bottom: 0.5em;
-    padding-top: 0.5em;
+
+.paddingT5 {
+    padding-top: 0.5em !important;
 }
+
+.paddingV5 {
+    padding-bottom: 0.5em !important;
+    padding-top: 0.5em !important;
+}
+
+.paddingV1 {
+    padding-bottom: 0.1em !important;
+    padding-top: 0.1em !important;
+}
+
 .paddingH10 {
-    padding-bottom: 1em;
-    padding-top: 1em;
+    padding-right: 1em !important;
+    padding-left: 1em !important;
+}
+
+.paddingH5 {
+    padding-right: 0.5em !important;
+    padding-left: 0.5em !important;
+}
+
+.sinPadding {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.sinMargin {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }
