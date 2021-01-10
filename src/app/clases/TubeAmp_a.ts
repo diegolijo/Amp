@@ -109,9 +109,6 @@ export class TubeAmp_a {
         this.impedanciaIn = Math.trunc(this.impedanciaIn);
     }
 
- 
-
-
 
     /*                   
                     this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));         

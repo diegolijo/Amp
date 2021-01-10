@@ -38,7 +38,6 @@ export class AppComponent {
     }
   }
 
-
   public toggleTheme(event: any) {
     this.darkMode = event.detail.checked;
     this.setAppTheme(this.darkMode);
