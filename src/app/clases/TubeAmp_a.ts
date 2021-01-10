@@ -39,9 +39,9 @@ export class TubeAmp_a {
     }
 
     public reset() {
-        this.relacionTrans = 20;
-        this.turn1 = 750;
-        this.turn2 = 75;
+        this.relacionTrans = 12.6;
+        this.turn1 = 650;
+        this.turn2 = 51;
 
 
 
@@ -51,53 +51,9 @@ export class TubeAmp_a {
         this.voltajeOutPp = 1 * this.RMS_FACTOR;
         this.voltajeOutRms = 1;
         this.potenciaRms = 0;
-        this.impedanciaIn = 5000;
-        this.impedanciaOut = 8;
+        this.impedanciaIn = 2550;
+        this.impedanciaOut = 16;
     }
-
-    /*                   
-                    this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));         
-                    this.voltajeOutRms = Math.sqrt(this.potenciaRms * this.impedanciaOut);              
-    */
-
-
-    public setT1() {
-        this.turn1 = this.turn2 * this.relacionTrans;
-        this.turn1 = Math.trunc(this.turn1);
-    }
-
-    public setT2() {
-        this.turn2 = this.turn1 / this.relacionTrans;
-        this.turn2 = Math.trunc(this.turn2);
-    }
-
-    public setRT() {
-        this.relacionTrans = this.turn1 / this.turn2;
-        this.relacionTrans = Math.trunc(this.relacionTrans);
-    }
-
-    public setRtZ(){
-        this.relacionTrans = Math.sqrt(this.impedanciaIn / this.impedanciaOut);
-        this.relacionTrans = Math.trunc(this.relacionTrans);
-    }
-
-    public setT1z(){
-        this.turn1 = this.turn2 * this.relacionTrans;
-        this.turn1 = Math.trunc(this.turn1);
-    }
-    public setT2z(){
-        this.turn2 = this.turn1 / this.relacionTrans;
-        this.turn2 = Math.trunc(this.turn2);
-    }
-
-    public setZi(){
-        this.impedanciaIn = this.impedanciaOut * this.relacionTrans * this.relacionTrans;
-        this.impedanciaIn = Math.trunc(this.impedanciaIn);
-    }
-    
-
-
-
 
     public toggleVR(k: any) {
         switch (k) {
@@ -119,7 +75,72 @@ export class TubeAmp_a {
 
 
 
-// cd  viejo  
+    public setT1() {
+        this.turn1 = this.turn2 * this.relacionTrans;
+        this.turn1 = Math.trunc(this.turn1);
+    }
+
+    public setT2() {
+        this.turn2 = this.turn1 / this.relacionTrans;
+        this.turn2 = Math.trunc(this.turn2);
+    }
+
+    public setRT() {
+        this.relacionTrans = this.turn1 / this.turn2;
+        this.relacionTrans = this.trunc(this.relacionTrans, 1);
+    }
+
+    public setRtZ() {
+        this.relacionTrans = Math.sqrt(this.impedanciaIn / this.impedanciaOut);
+        this.relacionTrans = this.trunc(this.relacionTrans, 1);
+    }
+
+    public setT1z() {
+        this.turn1 = this.turn2 * this.relacionTrans;
+        this.turn1 = Math.trunc(this.turn1);
+    }
+    public setT2z() {
+        this.turn2 = this.turn1 / this.relacionTrans;
+        this.turn2 = Math.trunc(this.turn2);
+    }
+
+    public setZi() {
+        this.impedanciaIn = this.impedanciaOut * this.relacionTrans * this.relacionTrans;
+        this.impedanciaIn = Math.trunc(this.impedanciaIn);
+    }
+
+ 
+
+
+
+    /*                   
+                    this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));         
+                    this.voltajeOutRms = Math.sqrt(this.potenciaRms * this.impedanciaOut);              
+    */
+
+    //---------------funciones matematicas-----------------
+    /**
+     * redondea el numero de decimales
+     * @param x 
+     * @param posiciones numero de decimales
+     */
+    public trunc(x, posiciones: number) {
+        var s = x.toString()
+        var l = s.length
+        var decimalLength = s.indexOf('.') + 1
+        if (decimalLength != 0) {
+            var numStr = s.substr(0, decimalLength + posiciones)
+            return Number(numStr)
+        } else {
+            return x;
+        }
+
+    }
+
+
+
+
+    // cd  viejo  
     public setV(p: string, v: number) {
         switch (p) {
             case this.VI_PICO:

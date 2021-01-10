@@ -1,7 +1,10 @@
 import { TubeAmp_a } from './../clases/TubeAmp_a';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { constants } from 'buffer';
 import { IfStmt } from '@angular/compiler';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { Platform } from '@ionic/angular';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 
 
@@ -11,7 +14,7 @@ import { IfStmt } from '@angular/compiler';
   styleUrls: ['home.page.scss'],
 })
 
-export class HomePage {
+export class HomePage implements OnInit {
 
   app: any = {
     titulo: "Tube calculator",
@@ -24,17 +27,29 @@ export class HomePage {
 
   amp: TubeAmp_a;
 
+  darkMode: boolean = true;
+
 
   constructor(
-    tubeAmp: TubeAmp_a,
+    public tubeAmp: TubeAmp_a,
   ) {
     this.amp = tubeAmp;
+    document.body.setAttribute('color-theme', 'dark');
+    this.onChangeZSEC();
   }
 
   ngOnInit() {
-    document.body.setAttribute('data-theme', 'light');
-    //  document.body.classList.toggle( 'dark' );
   }
+
+
+  public setAppTheme(dark: boolean) {
+    if (dark) {
+      document.body.setAttribute('color-theme', 'dark');
+      return;
+    }
+    document.body.setAttribute('color-theme', 'light');
+  }
+
 
   badgeSelected(key: string) {
     switch (key) {
@@ -83,13 +98,13 @@ export class HomePage {
         break;
       case 'T1':
         this.t1Select = true;
-        if (this.rtSelect == true) {
+        if (this.rtSelect != this.ziSelect ) {
           this.t2Select = false;
         }
         break;
       case 'T2':
         this.t2Select = true;
-        if (this.rtSelect == true) {
+        if (this.rtSelect != this.ziSelect) {
           this.t1Select = false;
         }
         break;
@@ -112,44 +127,56 @@ export class HomePage {
 
 
   public onChangeZSEC() {
-      this.amp.setRtZ();  
+    this.amp.setRtZ();
+    if (this.t1Select == false) {
+      this.amp.setT1z();
+    } else {
+      this.amp.setT2z();
+    }
   }
 
   public onChangeZPRI() {
     this.rangeSelected('Zi');
     this.rtSelect = false;
     this.amp.setRtZ();
-
     if (this.t1Select == false) {
       this.amp.setT1z();
     } else {
       this.amp.setT2z();
     }
-
   }
-
 
   public onChangePRI() {
-    if (this.rtSelect == true) {
+    if (this.ziSelect == true) {
       this.rangeSelected('T1');
       this.amp.setT2();
-    } else {
+    }
+    else if (this.rtSelect == false) {
       this.amp.setRT();
       this.amp.setZi();
+    } else {
+      this.amp.setT2();
+      this.rangeSelected('T1');
     }
   }
+
 
 
   public onChangeSEC() {
-    if (this.rtSelect == true) {
+
+    if (this.ziSelect == true) {
       this.rangeSelected('T2');
       this.amp.setT1();
-    } else {
-      this.amp.setRtZ();
-    //  this.amp.setZi();
+    } else if (this.rtSelect == false) {
+
+      this.amp.setRT();
+      this.amp.setZi();
+    } else { 
+      this.rangeSelected('T2');
+      this.amp.setT1();
+     
     }
   }
-
 
 
   public onChangeRT() {
@@ -171,6 +198,8 @@ export class HomePage {
 
   public onChangeP() {
   }
+
+
 
 }
 

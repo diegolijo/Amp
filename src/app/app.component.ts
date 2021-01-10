@@ -18,47 +18,38 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
-
-    // Use matchMedia to check the user preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-    toggleDarkTheme(prefersDark.matches);
-
-    // Listen for changes to the prefers-color-scheme media query
-    prefersDark.addListener((mediaQuery) => toggleDarkTheme(mediaQuery.matches));
-
-    // Add or remove the "dark" class based on if the media query matches
-    function toggleDarkTheme(shouldAdd) {
-      document.body.classList.toggle('dark', shouldAdd);
-
-    }
     this.initializeApp();
-
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
+  ngOnInit() {
+  }
 
+  async initializeApp() {
+    try {
+      const res = await this.platform.ready();
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
       this.darkMode = prefersDark.matches;
       this.setAppTheme(this.darkMode);
-
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+    }
+    catch (error) {
 
-
-
-    });
+    }
   }
 
 
+  public toggleTheme(event: any) {
+    this.darkMode = event.detail.checked;
+    this.setAppTheme(this.darkMode);
+  }
+
   public setAppTheme(dark: boolean) {
-/*     if (dark) {
+    if (dark) {
       document.body.setAttribute('color-theme', 'dark');
       return;
-    } */
+    }
     document.body.setAttribute('color-theme', 'light');
-    document.body.setAttribute('data-theme', 'light');    
   }
 
 }
