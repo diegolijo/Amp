@@ -22,6 +22,7 @@ export class HomePage implements OnInit {
   t2Select: boolean = false;
   rtSelect: boolean = true;
   ziSelect: boolean = false;
+  viSelect: boolean = false;
 
   amp: TubeAmp_a;
 
@@ -75,6 +76,10 @@ export class HomePage implements OnInit {
         this.t1Select = true;
         this.t2Select = true;
         break;
+        case 'VI':
+          this.viSelect = false;
+          
+          break;
       default:
         break;
     }
@@ -190,7 +195,20 @@ export class HomePage implements OnInit {
   }
 
 
+  public onChangeVPri() {
+    this.rangeSelected('VI');
+    this.amp.setV(this.amp.VI_PICO,this.amp.voltajeInDc);
+  }
 
+  public onChangeVopp() {
+    this.rangeSelected('VOPP');
+    this.amp.setV(this.amp.VO_PICO_PICO,this.amp.voltajeOutPp);
+  }
+
+  public onChangeVorms() {
+    this.rangeSelected('VORMS');
+    this.amp.setV(this.amp.VO_RNS,this.amp.voltajeOutRms);
+  }
 
 
 
