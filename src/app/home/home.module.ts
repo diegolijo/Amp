@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { TubeAmp_a } from '../clases/TubeAmp_a';
+import { TubeAmpA } from '../clases/TubeAmp_a';
 
 
 

@@ -1,4 +1,4 @@
-import { TubeAmp_a } from './../clases/TubeAmp_a';
+import { TubeAmpA } from './../clases/TubeAmp_a';
 import { Component, OnInit } from '@angular/core';
 import { constants } from 'buffer';
 import { IfStmt } from '@angular/compiler';
@@ -15,22 +15,22 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class HomePage implements OnInit {
 
   app: any = {
-    titulo: "Tube calculator",
+    titulo: 'Tube calculator',
   };
 
-  t1Select: boolean = true;
-  t2Select: boolean = false;
-  rtSelect: boolean = true;
-  ziSelect: boolean = false;
-  viSelect: boolean = false;
+  t1Select = true;
+  t2Select = false;
+  rtSelect = true;
+  ziSelect = false;
+  viSelect = false;
 
-  amp: TubeAmp_a;
+  amp: TubeAmpA;
 
-  darkMode: boolean = true;
+  darkMode = true;
 
 
   constructor(
-    public tubeAmp: TubeAmp_a,
+    public tubeAmp: TubeAmpA,
   ) {
     this.amp = tubeAmp;
     document.body.setAttribute('color-theme', 'dark');
@@ -76,10 +76,9 @@ export class HomePage implements OnInit {
         this.t1Select = true;
         this.t2Select = true;
         break;
-        case 'VI':
-          this.viSelect = false;
-          
-          break;
+      case 'VI':
+        this.viSelect = false;
+        break;
       default:
         break;
     }
@@ -90,129 +89,168 @@ export class HomePage implements OnInit {
     switch (key) {
       case 'RT':
         this.rtSelect = true;
-        if (this.t1Select == true) {
+        if (this.t1Select === true) {
           this.t2Select = false;
-        } else if (this.t2Select == true) {
+        } else if (this.t2Select === true) {
           this.t1Select = false;
         }
-        if (this.ziSelect == true) {
+        if (this.ziSelect === true) {
           this.ziSelect = false;
         }
         break;
       case 'T1':
         this.t1Select = true;
-        if (this.rtSelect != this.ziSelect ) {
+        if (this.rtSelect !== this.ziSelect) {
           this.t2Select = false;
         }
         break;
       case 'T2':
         this.t2Select = true;
-        if (this.rtSelect != this.ziSelect) {
+        if (this.rtSelect !== this.ziSelect) {
           this.t1Select = false;
         }
         break;
       case 'Zi':
         this.ziSelect = true;
-        if (this.t2Select == true && this.t1Select == true) {
-          this.t1Select != this.t1Select;
+        if (this.t2Select === true && this.t1Select === true) {
+          this.t1Select = !this.t1Select;
         }
-        if (this.t2Select == false && this.t1Select == false) {
-          this.t1Select != this.t1Select;
+        if (this.t2Select === false && this.t1Select === false) {
+          this.t1Select = !this.t1Select;
         }
         break;
       default:
         break;
     }
-
   }
 
-
-
+  public onChangeZRangePri() {
+    this.amp.setRangePri();
+  }
 
   public onChangeZSEC() {
-    this.amp.setRtZ();
-    if (this.t1Select == false) {
-      this.amp.setT1z();
+    if ((Number.isNaN(this.amp.impedanciaOut)) || (this.amp.impedanciaOut === 0) || this.amp.impedanciaOut === null) {
+      this.amp.impedanciaIn = 0;
     } else {
-      this.amp.setT2z();
+      this.amp.setRtZ();
+      if (this.t1Select === false) {
+        this.amp.setT1z();
+      } else {
+        this.amp.setT2z();
+      }
     }
   }
 
   public onChangeZPRI() {
-    this.rangeSelected('Zi');
-    this.rtSelect = false;
-    this.amp.setRtZ();
-    if (this.t1Select == false) {
-      this.amp.setT1z();
+    if ((Number.isNaN(this.amp.impedanciaIn)) || (this.amp.impedanciaIn === 0) || this.amp.impedanciaIn === null) {
+   //   this.amp.impedanciaIn = 0;
     } else {
-      this.amp.setT2z();
+      // this.amp.impedanciaIn = this.amp.redondea10(this.amp.impedanciaIn);
+      this.rangeSelected('Zi');
+      this.rtSelect = false;
+      this.amp.setRtZ();
+      if (this.t1Select === false) {
+        this.amp.setT1z();
+      } else {
+        this.amp.setT2z();
+      }
     }
   }
 
+
+
+
+
   public onChangePRI() {
-    if (this.ziSelect == true) {
-      this.rangeSelected('T1');
-      this.amp.setT2();
-    }
-    else if (this.rtSelect == false) {
-      this.amp.setRT();
-      this.amp.setZi();
+    if ((Number.isNaN(this.amp.turn1)) || (this.amp.turn1 === 0) || this.amp.turn1 === null) {
+      this.amp.turn1 = 0;
     } else {
-      this.amp.setT2();
-      this.rangeSelected('T1');
+      if (this.ziSelect === true) {
+        this.rangeSelected('T1');
+        this.amp.setT2();
+      }
+      else if (this.rtSelect === false) {
+        this.amp.setRT();
+        this.amp.setZi();
+      } else {
+        this.amp.setT2();
+        this.rangeSelected('T1');
+      }
     }
   }
 
 
 
   public onChangeSEC() {
-
-    if (this.ziSelect == true) {
-      this.rangeSelected('T2');
-      this.amp.setT1();
-    } else if (this.rtSelect == false) {
-
-      this.amp.setRT();
-      this.amp.setZi();
-    } else { 
-      this.rangeSelected('T2');
-      this.amp.setT1();
-     
+    if ((Number.isNaN(this.amp.turn2)) || (this.amp.turn2 === 0) || this.amp.turn2 === null) {
+      this.amp.turn2 = 0;
+    } else {
+      if (this.ziSelect === true) {
+        this.rangeSelected('T2');
+        this.amp.setT1();
+      } else if (this.rtSelect === false) {
+        this.amp.setRT();
+        this.amp.setZi();
+      } else {
+        this.rangeSelected('T2');
+        this.amp.setT1();
+      }
     }
   }
 
 
   public onChangeRT() {
-    this.rangeSelected('RT');
-    if (this.rtSelect == true) {
-      if (this.t2Select == true) {
-        this.amp.setT1();
-      } else {
-        this.amp.setT2();
+    if ((Number.isNaN(this.amp.relacionTrans)) || (this.amp.relacionTrans === 0) || this.amp.relacionTrans === null) {
+      this.amp.relacionTrans = 0;
+    } else {
+      this.rangeSelected('RT');
+      if (this.rtSelect === true) {
+        if (this.t2Select === true) {
+          this.amp.setT1();
+        } else {
+          this.amp.setT2();
+        }
+        this.amp.setZi();
       }
-      this.amp.setZi();
     }
   }
 
 
   public onChangeVPri() {
-    this.rangeSelected('VI');
-    this.amp.setV(this.amp.VI_PICO,this.amp.voltajeInDc);
+    if ((Number.isNaN(this.amp.voltajeInPp)) || (this.amp.voltajeInPp === 0) || this.amp.voltajeInPp === null) {
+      this.amp.voltajeInPp = 0;
+    } else {
+      this.rangeSelected('VI');
+      this.amp.setV(this.amp.VI_PICO, this.amp.voltajeInDc);
+    }
   }
 
   public onChangeVopp() {
-    this.rangeSelected('VOPP');
-    this.amp.setV(this.amp.VO_PICO_PICO,this.amp.voltajeOutPp);
+    if ((Number.isNaN(this.amp.voltajeOutPp)) || (this.amp.voltajeOutPp === 0) || this.amp.voltajeOutPp === null) {
+      this.amp.voltajeOutPp = 0;
+    } else {
+      this.rangeSelected('VOPP');
+      this.amp.setV(this.amp.VO_PICO_PICO, this.amp.voltajeOutPp);
+    }
   }
 
   public onChangeVorms() {
-    this.rangeSelected('VORMS');
-    this.amp.setV(this.amp.VO_RNS,this.amp.voltajeOutRms);
+    if ((Number.isNaN(this.amp.voltajeOutRms)) || (this.amp.voltajeOutRms === 0) || this.amp.voltajeOutRms === null) {
+      this.amp.voltajeOutRms = 0;
+    } else {
+      this.rangeSelected('VORMS');
+      this.amp.setV(this.amp.VO_RNS, this.amp.voltajeOutRms);
+    }
   }
 
 
 
   public onChangeP() {
+    if ((Number.isNaN(this.amp.potenciaRms)) || (this.amp.potenciaRms === 0) || this.amp.potenciaRms === null) {
+  //    this.amp.potenciaRms = 0;
+    } else {
+      this.amp.setVP();
+    }
   }
 
 

@@ -45,12 +45,12 @@
     max-height: 100% !important;
 }
 
-.title {
-    font-size: 1.1em !important;
-    text-align: center !important;
-    white-space: pre-line !important;
-    display: block !important;
-    font-weight: bold !important;
+.inputBadge {
+    position: absolute !important;
+    height: 1.8em;
+    width: 3.6em;
+    margin-left: -0.7em !important;
+    margin-top: -0.65em !important;
 }
 
 .smallLabel {
@@ -124,14 +124,14 @@
     padding-left: 0.5em !important;
 }
 
-.sinPadding {
+.noPadding {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     padding-left: 0px !important;
     padding-right: 0px !important;
 }
 
-.sinMargin {
+.noMargin {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
     margin-left: 0px !important;

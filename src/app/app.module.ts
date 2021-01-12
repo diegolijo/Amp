@@ -8,7 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { TubeAmp_a } from './clases/TubeAmp_a';
+import { TubeAmpA } from './clases/TubeAmp_a';
 
 
 @NgModule({
@@ -17,9 +17,8 @@ import { TubeAmp_a } from './clases/TubeAmp_a';
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [
     StatusBar,
-    SplashScreen,    
-    TubeAmp_a,  
-   
+    SplashScreen,
+    TubeAmpA,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
