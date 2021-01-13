@@ -94,7 +94,7 @@ export class TubeAmpA {
 
     public setRtZ() {
         this.relacionTrans = Math.sqrt(this.impedanciaIn / this.impedanciaOut);
-     //   this.relacionTrans = this.trunc(this.relacionTrans, 1);
+        this.relacionTrans = this.trunc(this.relacionTrans, 1);
     }
 
     public setT1z() {
