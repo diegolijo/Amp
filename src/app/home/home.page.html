@@ -27,29 +27,47 @@
 
 <ion-content *ngIf="this.amp.calculaR">
 
-    <div class="textCenter mediumFont  noMargin paddingT10">Impedancia Pimario:</div>
-    <ion-segment [value]="this.amp.ziRange" [(ngModel)]="this.amp.ziRange" (ngModelChange)="this.onChangeZRangePri()">
-      <ion-segment-button value="5000">
-        <ion-label>5k</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="10000">
-        <ion-label>10k</ion-label>
-      </ion-segment-button>
-    </ion-segment>
- 
-    <div class="textCenter mediumFont  noMargin paddingT10">Voltaje primario:
-      <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
-        (click)="badgeSelected('VI')">
-        <div class="inputBadge">
-          <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeInDc"
-            (ngModelChange)="this.onChangeVPri()"></ion-input>
+  <div class="textCenter mediumFont  noMargin paddingT10">Voltaje primario:
+    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
+      (click)="badgeSelected('VI')">
+      <div class="inputBadge">
+        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeInDc"
+          (ngModelChange)="this.onChangeVPri()"></ion-input>
+      </div>
+    </ion-badge>
+  </div>
+  <ion-range type="range" min="1" max="1000" step="1" [color]="(this.viResult==true)? 'primary':'secondary'"
+    [(ngModel)]="this.amp.voltajeInDc" (ngModelChange)="this.onChangeVPri()" class="paddingV1">
+  </ion-range>
+
+  <ion-grid class="noPadding noMargin">
+    <ion-row>
+      <ion-col size='8' class="noPadding noMargin">
+        <div class="textCenter mediumFont  noMargin paddingT10">Impedancia Pimario:</div>
+        <ion-segment [value]="this.amp.ziRange" [(ngModel)]="this.amp.ziRange"
+          (ngModelChange)="this.onChangeZRangePri()">
+          <ion-segment-button value="5000">
+            <ion-label>5k</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="10000">
+            <ion-label>10k</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+
+
+      <!---------------------- Valvula --------------------->
+      <ion-col size='4' class="noPadding noMargin">
+        <div  class="valvulaImg" style="padding-top: 0.5em; padding-bottom: 0.5em;">
+          <ion-img [hidden]="this.getImgTube3(1)" src="assets/img/el84BN3.png"></ion-img>
+          <ion-img [hidden]="this.getImgTube2(1)" src="assets/img/el84BN2.png"></ion-img>
+          <ion-img [hidden]="this.getImgTube1(1)" src="assets/img/el84BN1.png"></ion-img>
+          <ion-img [hidden]="this.getImgTube0(1)" src="assets/img/el84BN0.png"></ion-img>
+          <!-- <img src="assets/img/el84BN3.png" class="npgIcons">  -->
         </div>
-      </ion-badge>
-    </div>
-    <ion-range type="range" min="1" max="1000" step="1" [color]="(this.viResult==true)? 'primary':'secondary'"
-      [(ngModel)]="this.amp.voltajeInDc" (ngModelChange)="this.onChangeVPri()" class="paddingV1">
-    </ion-range>
-  
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 
   <ion-range type="range" min="1" [(max)]="this.amp.ziRange" step="1"

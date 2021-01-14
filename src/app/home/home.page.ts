@@ -40,6 +40,15 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
+  async ionViewWillEnter() {
+
+  }
+  async ionViewDidEnter() {
+    this.getImgTube0(0);
+    this.getImgTube1(0);
+    this.getImgTube2(0);
+    this.getImgTube3(0);
+  }
 
   public setAppTheme(dark: boolean) {
     if (dark) {
@@ -126,6 +135,61 @@ export class HomePage implements OnInit {
         break;
     }
   }
+
+
+  getImgTube3(activar: number) {
+    if (activar === 0) {
+      return false;
+    } else {
+      if (this.amp.impedanciaIn <= 1000) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  getImgTube2(activar: number) {
+    if (activar === 0) {
+      return false;
+    } else {
+      if (this.amp.impedanciaIn > 1000 && this.amp.impedanciaIn <= 2200) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  getImgTube1(activar: number) {
+    if (activar === 0) {
+      return false;
+    } else {
+      if (this.amp.impedanciaIn > 2200 && this.amp.impedanciaIn <= 3300) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  getImgTube0(activar: number) {
+    if (activar === 0) {
+      return false;
+    } else {
+      if (this.amp.impedanciaIn > 3300 && this.amp.impedanciaIn < 5500) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  showTube(val: boolean) {
+    return val;
+  }
+
+
+
+
 
   public onChangeZRangePri() {
     this.amp.setRangePri();
@@ -227,7 +291,7 @@ export class HomePage implements OnInit {
 
 
   public onChangeVPri() {
-    if ((Number.isNaN(this.amp.voltajeInPp)) || (this.amp.voltajeInPp === 0) || this.amp.voltajeInPp === null) {
+    if ((Number.isNaN(this.amp.voltajeInDc)) || (this.amp.voltajeInDc === 0) || this.amp.voltajeInDc === null) {
       //    this.amp.voltajeInPp = 0;
     } else {
       this.rangeSelected('VI');
