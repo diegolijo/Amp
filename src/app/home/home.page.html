@@ -5,46 +5,112 @@
   </ion-toolbar>
   <div>
     <!-- style="display:flex; justify-content:space-around" -->
-    <ion-button class="botonesModo" size="outline" (click)="this.amp.toggleVR(this.amp.CALCULAR_V)"
-      [color]="(this.amp.calculaV === true)?'primary':'secondary'">
-      <ion-icon name="flash" size="large" [color]="(this.amp.calculaV === true)?'primary':'secondary'">
+    <ion-button class="botonesModo" size="outline" (click)="this.togglePageMode(this.CALCULAR_V)"
+      [color]="( this.modo === this.CALCULAR_V)?'primary':'secondary'">
+      <ion-icon name="flash" size="large" [color]="(this.modo === this.CALCULAR_V)?'primary':'secondary'">
       </ion-icon>
     </ion-button>
-    <ion-button class="botonesModo" size="outline" (click)="this.amp.toggleVR(this.amp.CALCULAR_R)"
-      [color]="(this.amp.calculaR === true)?'primary':'secondary'">
+    <ion-button class="botonesModo" size="outline" (click)="this.togglePageMode(this.CALCULAR_R)"
+      [color]="(this.modo === this.CALCULAR_R)?'primary':'secondary'">
       <ion-icon name="swap-horizontal-outline" size="large"
-        [color]="(this.amp.calculaR === true)?'primary':'secondary'">
+        [color]="(this.modo === this.CALCULAR_R)?'primary':'secondary'">
       </ion-icon>
     </ion-button>
     <ion-label color="secondary" class="bigFont fontBold noMargin paddingV10 paddingH10" style="float: right;">
-      {{this.amp.impedanciaIn/1000}} K</ion-label>
+      {{this.getZPriTrunc()}} K : {{this.amp.impedanciaOut}}</ion-label>
+    <ion-label color="secondary" class="bigFont fontBold noMargin paddingV10 paddingH10" style="float: right;">
+      {{this.getIPriTrunc()}} mA</ion-label>
+
   </div>
 </ion-header>
 
 
+<!--******************************************* tensiones *********************************************-->
+<ion-content *ngIf="modo === this.CALCULAR_V">
 
-<!--******************************************* trafo *********************************************-->
+  <div style="height: 1em;"></div>
 
-<ion-content *ngIf="this.amp.calculaR">
+  <div style="display: block; width: 100%;">
+    <div class="graficImg">
+      <img style="bottom: 0em;" src="assets/img/el84_600x400.png">
+      <canvas class="grafic" baseChart [datasets]="chartData" [options]="chartOptions" [colors]="chartColors"
+        [legend]="showLegend" [chartType]="chartType"  >
+      </canvas>
+    </div>
+  </div>
 
-  <div class="textCenter mediumFont  noMargin paddingT10">Voltaje primario:
+  <div class="paddingH5 mediumFont paddingH5 noMargin paddingT10">Voltaje primario:
     <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
       (click)="badgeSelected('VI')">
       <div class="inputBadge">
-        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeInDc"
+        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeInTns"
           (ngModelChange)="this.onChangeVPri()"></ion-input>
       </div>
     </ion-badge>
   </div>
   <ion-range type="range" min="1" max="1000" step="1" [color]="(this.viResult==true)? 'primary':'secondary'"
-    [(ngModel)]="this.amp.voltajeInDc" (ngModelChange)="this.onChangeVPri()" class="paddingV1">
+    [(ngModel)]="this.amp.voltajeInTns" (ngModelChange)="this.onChangeVPri()" class="paddingV1">
   </ion-range>
 
+  <!--  
+this.amp.turn1
+this.amp.relacionTrans
+this.amp.turn2
+-->
+
+  <div class="paddingH5 mediumFont  noMargin paddingT10">Vo p-p:</div>
+  <ion-range type="range" min="1" max="70" step="1" [color]="(this.ziResult==true)? 'primary':'secondary'"
+    [(ngModel)]="this.amp.voltajeOutPp" (ngModelChange)="this.onChangeVopp()" class="paddingV1">
+    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
+      (click)="badgeSelected('Vpp')">
+      <div class="inputBadge">
+        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeOutPp"
+          (ngModelChange)="this.onChangeVopp()"></ion-input>
+      </div>
+    </ion-badge>
+  </ion-range>
+
+
+  <div class="paddingH5 mediumFont  noMargin paddingT10">Vo rms:</div>
+  <ion-range type="range" min="1" max="25" step="1" [color]="(this.ziResult==true)? 'primary':'secondary'"
+    [(ngModel)]="this.amp.voltajeOutRms" (ngModelChange)="this.onChangeVorms()" class="paddingV1">
+    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
+      (click)="badgeSelected('Vrms')">
+      <div class="inputBadge">
+        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeOutRms"
+          (ngModelChange)="this.onChangeVorms()"></ion-input>
+      </div>
+    </ion-badge>
+  </ion-range>
+
+
+  <div class="paddingH5 mediumFont  noMargin paddingT10">P(rms):</div>
+  <ion-range type="range" min="1" max="25" step="1" [color]="(this.ziResult==true)? 'primary':'secondary'"
+    [(ngModel)]="this.amp.potenciaRms" (ngModelChange)="this.onChangeP()" class="paddingV1">
+    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
+      (click)="badgeSelected('Prms')">
+      <div class="inputBadge">
+        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.potenciaRms"
+          (ngModelChange)="this.onChangeP()"></ion-input>
+      </div>
+    </ion-badge>
+  </ion-range>
+
+</ion-content>
+
+
+<!--******************************************* trafo *********************************************-->
+
+<ion-content *ngIf="modo === this.CALCULAR_R">
+
+  <div style="height: 2em;"></div>
+
+  <!-- Impedancia Pimario: -->
   <ion-grid class="noPadding noMargin">
     <ion-row>
       <ion-col size='8' class="noPadding noMargin">
-        <div class="textCenter mediumFont  noMargin paddingT10">Impedancia Pimario:</div>
-        <ion-segment [value]="this.amp.ziRange" [(ngModel)]="this.amp.ziRange"
+        <div class="mediumFont  noMargin paddingT10" style="padding-left: 1.25em;">Impedancia Pimario:</div>
+        <ion-segment [value]="this.amp.ziRange" [(ngModel)]="this.amp.ziRange" style="padding-left: 0.88em;"
           (ngModelChange)="this.onChangeZRangePri()">
           <ion-segment-button value="5000">
             <ion-label>5k</ion-label>
@@ -58,19 +124,19 @@
 
       <!---------------------- Valvula --------------------->
       <ion-col size='4' class="noPadding noMargin">
-        <div  class="valvulaImg" style="padding-top: 0.5em; padding-bottom: 0.5em;">
-          <ion-img [hidden]="this.getImgTube3(1)" src="assets/img/el84BN3.png"></ion-img>
-          <ion-img [hidden]="this.getImgTube2(1)" src="assets/img/el84BN2.png"></ion-img>
-          <ion-img [hidden]="this.getImgTube1(1)" src="assets/img/el84BN1.png"></ion-img>
-          <ion-img [hidden]="this.getImgTube0(1)" src="assets/img/el84BN0.png"></ion-img>
-          <!-- <img src="assets/img/el84BN3.png" class="npgIcons">  -->
+        <div class="valvulaImg" style="padding-top: 0.5em; padding-bottom: 0.5em; ">
+          <img [hidden]="this.getImgTube3(1)" src="assets/img/el84BN3.png">
+          <img [hidden]="this.getImgTube2(1)" src="assets/img/el84BN2.png">
+          <img [hidden]="this.getImgTube1(1)" src="assets/img/el84BN1.png">
+          <img [hidden]="this.getImgTube0(1)" src="assets/img/el84BN0.png">
         </div>
+
       </ion-col>
     </ion-row>
   </ion-grid>
 
 
-  <ion-range type="range" min="1" [(max)]="this.amp.ziRange" step="1"
+  <ion-range type="range" min="1" [(max)]="this.amp.ziRange" step="10"
     [color]="(this.ziResult==true)? 'primary':'secondary'" [(ngModel)]="this.amp.impedanciaIn"
     (ngModelChange)="this.onChangeZPRI()" class="paddingV1">
     <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
@@ -84,9 +150,9 @@
     <ion-icon range-right name="arrow-circle"></ion-icon> -->
   </ion-range>
 
-  <div class="textCenter mediumFont  noMargin paddingT10">Impedancia Altavoz:</div>
+  <div class="mediumFont noMargin paddingT10" style="padding-left: 1.25em;">Altavoz:</div>
   <ion-segment [value]="this.amp.impedanciaOut" [(ngModel)]="this.amp.impedanciaOut" color="success"
-    (ngModelChange)="this.onChangeZSEC()">
+    (ngModelChange)="this.onChangeZSEC()" style="padding-left: 0.88em; padding-right: 0.88em;">
     <ion-segment-button value="4">
       <ion-label>4 Ohm</ion-label>
     </ion-segment-button>
@@ -101,7 +167,7 @@
     </ion-segment-button> -->
   </ion-segment>
 
-  <div class="textCenter mediumFont  noMargin paddingT10"> Relacion Transformación</div>
+  <div class="mediumFont  noMargin paddingT10" style="padding-left: 1.25em;"> Relacion Transformador</div>
   <ion-range type="range" min="1" max="35" snaps="false" step="1" bar-active [(ngModel)]="this.amp.relacionTrans"
     (ngModelChange)="this.onChangeRT()" class="paddingV1" [color]="(this.rtResult==true)? 'primary':'secondary'">
     <ion-badge tappable slot="end" [color]="(this.rtResult==true)? 'primary':'success'" class="badgeXXXX"
@@ -113,7 +179,7 @@
     </ion-badge>
   </ion-range>
 
-  <div class="textCenter mediumFont  noMargin paddingT10">Espiras Primario:</div>
+  <div class="mediumFont  noMargin paddingT10" style="padding-left: 1.25em;">Espiras Primario:</div>
   <ion-range type="range" min="1" max="2000" step="1" [color]="(this.t1Result==true)? 'primary':'secondary'"
     [(ngModel)]="this.amp.turn1" (ngModelChange)="this.onChangePRI()" class="paddingV1">
     <ion-badge tappable slot="end" [color]="(this.t1Result==true)? 'primary':'success'" class="badgeXXXX"
@@ -127,7 +193,7 @@
     <ion-icon range-right name="arrow-circle"></ion-icon> -->
   </ion-range>
 
-  <div class="textCenter mediumFont  noMargin paddingT10">Espiras Secundario</div>
+  <div class="mediumFont  noMargin paddingT10" style="padding-left: 1.25em;">Espiras Secundario</div>
   <!-- value="100" ?? -->
   <ion-range type="range" min="1" max="150" step="1" [(ngModel)]="this.amp.turn2"
     [color]="(this.t2Result==true)? 'primary':'secondary'" (ngModelChange)="this.onChangeSEC()" class="paddingV1">
@@ -140,73 +206,68 @@
     </ion-badge>
   </ion-range>
 
+  <div style="height: 1em;"></div>
+
 </ion-content>
 
 
 
+<ion-footer>
 
+  <!-- Voltaje primario: -->
 
-<!--******************************************* tensiones *********************************************-->
-<ion-content *ngIf="this.amp.calculaV">
-
-  <div class="textCenter mediumFont  noMargin paddingT10">Voltaje primario:
-    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
-      (click)="badgeSelected('VI')">
-      <div class="inputBadge">
-        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeInDc"
-          (ngModelChange)="this.onChangeVPri()"></ion-input>
-      </div>
-    </ion-badge>
+  <div class="columnasFlex">
+    <ion-label color="dark" class="itemFlex  mediumFont  noMargin textCenter">V primario:</ion-label>
+    <ion-label color="dark" class="itemFlex  mediumFont  noMargin textCenter">Vo p-p:</ion-label>
+    <ion-label color="dark" class="itemFlex  mediumFont  noMargin textCenter">Vo rms:</ion-label>
+    <ion-label color="dark" class="itemFlex  mediumFont  noMargin textCenter">P(rms):</ion-label>
   </div>
-  <ion-range type="range" min="1" max="1000" step="1" [color]="(this.viResult==true)? 'primary':'secondary'"
-    [(ngModel)]="this.amp.voltajeInDc" (ngModelChange)="this.onChangeVPri()" class="paddingV1">
-  </ion-range>
 
-  <!--  
-this.amp.turn1
-this.amp.relacionTrans
-this.amp.turn2
--->
+  <div class="columnasFlex">
+    <div class="itemFlex paddingV10 paddingH10">
+      <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeFlex"
+        (click)="badgeSelected('VI')">
+        <div class="inputBadgefooter">
+          <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeInTns"
+            (ngModelChange)="this.onChangeVPri()"></ion-input>
+        </div>
+      </ion-badge>
+    </div>
+    <div class="itemFlex paddingV10 paddingH10">
+      <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeFlex"
+        (click)="badgeSelected('Vpp')">
+        <div class="inputBadgefooter">
+          <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeOutPp"
+            (ngModelChange)="this.onChangeVopp()"></ion-input>
+        </div>
+      </ion-badge>
+    </div>
+    <div class="itemFlex paddingV10 paddingH10">
+      <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeFlex"
+        (click)="badgeSelected('Vrms')">
+        <div class="inputBadgefooter">
+          <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeOutRms"
+            (ngModelChange)="this.onChangeVorms()"></ion-input>
+        </div>
+      </ion-badge>
+    </div>
+    <div class="itemFlex paddingV10 paddingH10">
+      <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeFlex"
+        (click)="badgeSelected('Prms')">
+        <div class="inputBadgefooter">
+          <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.potenciaRms"
+            (ngModelChange)="this.onChangeP()"></ion-input>
+        </div>
+      </ion-badge>
+    </div>
+  </div>
 
-  <div class="textCenter mediumFont  noMargin paddingT10">Vo p-p:</div>
-  <ion-range type="range" min="1" max="70" step="1" [color]="(this.ziResult==true)? 'primary':'secondary'"
-    [(ngModel)]="this.amp.voltajeOutPp" (ngModelChange)="this.onChangeVopp()" class="paddingV1">
-    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
-      (click)="badgeSelected('Vpp')">
-      <div class="inputBadge">
-        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeOutPp"
-          (ngModelChange)="this.onChangeVopp()"></ion-input>
-      </div>
-    </ion-badge>
-  </ion-range>
+
+</ion-footer>
 
 
-  <div class="textCenter mediumFont  noMargin paddingT10">Vo rms:</div>
-  <ion-range type="range" min="1" max="25" step="1" [color]="(this.ziResult==true)? 'primary':'secondary'"
-    [(ngModel)]="this.amp.voltajeOutRms" (ngModelChange)="this.onChangeVorms()" class="paddingV1">
-    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
-      (click)="badgeSelected('Vrms')">
-      <div class="inputBadge">
-        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.voltajeOutRms"
-          (ngModelChange)="this.onChangeVorms()"></ion-input>
-      </div>
-    </ion-badge>
-  </ion-range>
 
 
-  <div class="textCenter mediumFont  noMargin paddingT10">P(rms):</div>
-  <ion-range type="range" min="1" max="25" step="1" [color]="(this.ziResult==true)? 'primary':'secondary'"
-    [(ngModel)]="this.amp.potenciaRms" (ngModelChange)="this.onChangeP()" class="paddingV1">
-    <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
-      (click)="badgeSelected('Prms')">
-      <div class="inputBadge">
-        <ion-input type="number" class="noPadding noMargin bigFont" [(ngModel)]="this.amp.potenciaRms"
-          (ngModelChange)="this.onChangeP()"></ion-input>
-      </div>
-    </ion-badge>
-  </ion-range>
-
-</ion-content>
 
 
 

@@ -1,10 +1,10 @@
-import { TubeAmpA } from './../clases/TubeAmp_a';
 import { Component, OnInit } from '@angular/core';
-import { constants } from 'buffer';
-import { IfStmt } from '@angular/compiler';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { Platform } from '@ionic/angular';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { TubeAmpA } from './../clases/TubeAmp_a';
+import { Helper } from '../clases/helper';
+
+import { ChartDataSets } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-home',
@@ -18,31 +18,64 @@ export class HomePage implements OnInit {
     titulo: 'Tube calculator',
   };
 
+  public CALCULAR_V = 'V';
+  public CALCULAR_R = 'R';
+
+
   t1Result = true;
   t2Result = false;
   rtResult = true;
   ziResult = false;
   viResult = false;
 
+  public modo = this.CALCULAR_V;
+
   amp: TubeAmpA;
 
-  darkMode = true;
+  // Chart Values //
+  // Data
+  chartData: ChartDataSets[] = [];
+
+  // Options
+  chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    title: {
+      display: false
+    },
+    pan: {
+      enabled: true,
+      mode: 'xy'
+    }
+  };
+  chartColors: Color[] = [
+    {
+      borderColor: '#000000',
+      //  backgroundColor: ['#ff4961', '#ffd534', '#2fdf75']
+    }
+  ];
+  chartType = 'line';
+  showLegend = false;
+
 
 
   constructor(
     public tubeAmp: TubeAmpA,
+    public helper: Helper
   ) {
     this.amp = tubeAmp;
     document.body.setAttribute('color-theme', 'dark');
-    this.onChangeZSEC();
   }
 
   ngOnInit() {
   }
 
   async ionViewWillEnter() {
-
+    this.amp.setIi();
+    this.onChangeZSEC();
+    this.setGrafica();
   }
+
   async ionViewDidEnter() {
     this.getImgTube0(0);
     this.getImgTube1(0);
@@ -56,6 +89,22 @@ export class HomePage implements OnInit {
       return;
     }
     document.body.setAttribute('color-theme', 'light');
+  }
+
+
+
+  public togglePageMode(k: any) {
+    switch (k) {
+      case this.CALCULAR_V:
+        this.modo = this.CALCULAR_V;
+        this.amp.getPOuts();
+        break;
+      case this.CALCULAR_R:
+        this.modo = this.CALCULAR_R;
+        break;
+      default:
+        break;
+    }
   }
 
 
@@ -91,8 +140,9 @@ export class HomePage implements OnInit {
       default:
         break;
     }
-
   }
+
+
 
   rangeSelected(key: string) {
     switch (key) {
@@ -137,11 +187,45 @@ export class HomePage implements OnInit {
   }
 
 
+
+
+  public getIPriTrunc() {
+    let Iintrunc = this.amp.intensidadIn * 10000;
+    Iintrunc = Math.trunc(Iintrunc);
+    Iintrunc = Iintrunc / 10;
+    const s = Iintrunc.toString();
+    const l = s.length;
+    const decimalLength = s.indexOf('.') + 1;
+    if (decimalLength !== 0) {
+      const numStr = s.substr(0, decimalLength + 1);
+      return Number(numStr);
+    } else {
+      return Iintrunc.toString() + '.0';
+    }
+  }
+
+
+
+  public getZPriTrunc() {
+    let Zintrunc = this.amp.impedanciaIn / 100;
+    Zintrunc = Math.trunc(Zintrunc);
+    Zintrunc = Zintrunc / 10;
+    const s = Zintrunc.toString();
+    const l = s.length;
+    const decimalLength = s.indexOf('.') + 1;
+    if (decimalLength !== 0) {
+      const numStr = s.substr(0, decimalLength + 1);
+      return Number(numStr);
+    } else {
+      return Zintrunc.toString() + '.0';
+    }
+  }
+
   getImgTube3(activar: number) {
     if (activar === 0) {
       return false;
     } else {
-      if (this.amp.impedanciaIn <= 1000) {
+      if (this.amp.intensidadIn >= this.amp.i843) {
         return false;
       } else {
         return true;
@@ -153,7 +237,7 @@ export class HomePage implements OnInit {
     if (activar === 0) {
       return false;
     } else {
-      if (this.amp.impedanciaIn > 1000 && this.amp.impedanciaIn <= 2200) {
+      if (this.amp.i843 > this.amp.intensidadIn && this.amp.intensidadIn >= this.amp.i842) {
         return false;
       } else {
         return true;
@@ -164,30 +248,25 @@ export class HomePage implements OnInit {
     if (activar === 0) {
       return false;
     } else {
-      if (this.amp.impedanciaIn > 2200 && this.amp.impedanciaIn <= 3300) {
+      if (this.amp.i842 > this.amp.intensidadIn && this.amp.intensidadIn >= this.amp.i841) {
         return false;
       } else {
         return true;
       }
     }
   }
+
   getImgTube0(activar: number) {
     if (activar === 0) {
       return false;
     } else {
-      if (this.amp.impedanciaIn > 3300 && this.amp.impedanciaIn < 5500) {
+      if (this.amp.intensidadIn < this.amp.i841) {
         return false;
       } else {
         return true;
       }
     }
   }
-
-  showTube(val: boolean) {
-    return val;
-  }
-
-
 
 
 
@@ -208,27 +287,28 @@ export class HomePage implements OnInit {
     }
   }
 
-
-
-
-
   public onChangeZPRI() {
     if ((Number.isNaN(this.amp.impedanciaIn)) || (this.amp.impedanciaIn === 0) || this.amp.impedanciaIn === null) {
-      //this.amp.impedanciaIn = 0;
+      // this.amp.impedanciaIn = 0;
     } else {
-      this.amp.impedanciaIn = this.amp.redondea10(this.amp.impedanciaIn);
+      this.amp.impedanciaIn = this.helper.redondea50(this.amp.impedanciaIn);
+      if (this.amp.impedanciaIn === 0) {
+        this.amp.impedanciaIn = 50;
+      }
       this.rangeSelected('Zi');
       this.rtResult = false;
       this.amp.setRtZ();
+      this.amp.setIi();
+      this.setGrafica();
       if (this.t1Result === false) {
         this.amp.setT1z();
       } else {
         this.amp.setT2z();
       }
-      this.onChangeVopp();
+      // TODO shitch entre onChangePRI / onChangeP
+      this.onChangeP();
     }
   }
-
 
   public onChangeRT() {
     if ((Number.isNaN(this.amp.relacionTrans)) || (this.amp.relacionTrans === 0) || this.amp.relacionTrans === null) {
@@ -242,13 +322,13 @@ export class HomePage implements OnInit {
           this.amp.setT2();
         }
         this.amp.setZi();
+        this.amp.setIi();
+        this.setGrafica();
       }
-      this.onChangeVopp();
+      // TODO shitch entre onChangePRI / onChangeP
+      this.onChangeP();
     }
   }
-
-
-
 
   public onChangePRI() {
     if ((Number.isNaN(this.amp.turn1)) || (this.amp.turn1 === 0) || this.amp.turn1 === null) {
@@ -261,14 +341,14 @@ export class HomePage implements OnInit {
       else if (this.rtResult === false) {
         this.amp.setRT();
         this.amp.setZi();
+        this.amp.setIi();
+        this.setGrafica();
       } else {
         this.amp.setT2();
         this.rangeSelected('T1');
       }
     }
   }
-
-
 
   public onChangeSEC() {
     if ((Number.isNaN(this.amp.turn2)) || (this.amp.turn2 === 0) || this.amp.turn2 === null) {
@@ -280,6 +360,8 @@ export class HomePage implements OnInit {
       } else if (this.rtResult === false) {
         this.amp.setRT();
         this.amp.setZi();
+        this.amp.setIi();
+        this.setGrafica();
       } else {
         this.rangeSelected('T2');
         this.amp.setT1();
@@ -287,15 +369,15 @@ export class HomePage implements OnInit {
     }
   }
 
-
-
-
   public onChangeVPri() {
-    if ((Number.isNaN(this.amp.voltajeInDc)) || (this.amp.voltajeInDc === 0) || this.amp.voltajeInDc === null) {
+    if ((Number.isNaN(this.amp.voltajeInTns)) || (this.amp.voltajeInTns === 0) || this.amp.voltajeInTns === null) {
       //    this.amp.voltajeInPp = 0;
     } else {
       this.rangeSelected('VI');
-      this.amp.setV(this.amp.VI_PICO, this.amp.voltajeInDc);
+      this.amp.setV(this.amp.VI_PICO, this.amp.voltajeInTns);
+      this.amp.getPOuts();
+      this.amp.setIi();
+      this.setGrafica();
     }
   }
 
@@ -305,6 +387,9 @@ export class HomePage implements OnInit {
     } else {
       this.rangeSelected('VOPP');
       this.amp.setV(this.amp.VO_PICO_PICO, this.amp.voltajeOutPp);
+      this.amp.getPOuts();
+      this.amp.setIi();
+      this.setGrafica();
     }
   }
 
@@ -314,20 +399,30 @@ export class HomePage implements OnInit {
     } else {
       this.rangeSelected('VORMS');
       this.amp.setV(this.amp.VO_RNS, this.amp.voltajeOutRms);
+      this.amp.getPOuts();
+      this.amp.setIi();
+      this.setGrafica();
     }
   }
-
-
 
   public onChangeP() {
     if ((Number.isNaN(this.amp.potenciaRms)) || (this.amp.potenciaRms === 0) || this.amp.potenciaRms === null) {
       //    this.amp.potenciaRms = 0;
     } else {
       this.amp.setVP();
+      this.amp.setIi();
+      this.setGrafica();
     }
   }
 
 
+
+  public setGrafica() {
+    this.chartData = [{
+      data: [{ x: 0, y: this.amp.intensidadIn }, { x: this.amp.voltajeInTns, y: 0 }]
+    }];
+
+  }
 
 }
 

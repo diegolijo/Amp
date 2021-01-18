@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
-
 import { HomePageRoutingModule } from './home-routing.module';
-import { TubeAmpA } from '../clases/TubeAmp_a';
+import { ChartsModule } from 'ng2-charts';
+
 
 
 
@@ -14,7 +14,8 @@ import { TubeAmpA } from '../clases/TubeAmp_a';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    ChartsModule
   ],
   declarations: [HomePage]
 })

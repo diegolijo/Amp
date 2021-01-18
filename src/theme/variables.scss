@@ -90,12 +90,15 @@
     --ion-color-primary-shade: #f7e2a0;
     --ion-color-primary-tint: #d1b96a;
 
-    --ion-color-secondary: #fa6c2a;
+   --ion-color-secondary: #cf5a00;
     --ion-color-secondary-rgb: 56, 128, 255;
-    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast: #000000;
     --ion-color-secondary-contrast-rgb: 255, 255, 255;
     --ion-color-secondary-shade: #ca5722;
-    --ion-color-secondary-tint: #fd7d42;
+    --ion-color-secondary-tint: #fd7d42; 
+
+
+    
   
     --ion-color-tertiary: #ff0000;
     --ion-color-tertiary-rgb: 80, 200, 255;
@@ -125,12 +128,12 @@
     --ion-color-danger-shade: #9e0425;
     --ion-color-danger-tint: #bc1d3f;
   
-    --ion-color-dark: #f4f5f8;
+    --ion-color-dark: #f7dda6;
     --ion-color-dark-rgb: 244,245,248;
     --ion-color-dark-contrast: #000000;
     --ion-color-dark-contrast-rgb: 0,0,0;
-    --ion-color-dark-shade: #d7d8da;
-    --ion-color-dark-tint: #f5f6f9;
+    --ion-color-dark-shade: #ceb276;
+    --ion-color-dark-tint: #f8e9c8;
   
     --ion-color-medium: #989aa2;
     --ion-color-medium-rgb: 152,154,162;
@@ -207,12 +210,14 @@
     * iOS Dark Theme
     * -------------------------------------------
     */
+
+    
   
   .ios body[color-theme = "dark"] {
-    --ion-background-color: #000000;
+    --ion-background-color: #121212;
     --ion-background-color-rgb: 0,0,0;
   
-    --ion-text-color: #ffffff;
+    --ion-text-color: #f7dda6;
     --ion-text-color-rgb: 255,255,255;
   
     --ion-color-step-50: #0d0d0d;
@@ -250,7 +255,7 @@
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18,18,18;
   
-    --ion-text-color: #ffffff;
+    --ion-text-color: #f3dba7;
     --ion-text-color-rgb: 255,255,255;
   
     --ion-border-color: #222222;
