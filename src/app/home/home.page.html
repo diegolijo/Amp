@@ -16,10 +16,22 @@
         [color]="(this.modo === this.CALCULAR_R)?'primary':'secondary'">
       </ion-icon>
     </ion-button>
-    <ion-label color="secondary" class="bigFont fontBold noMargin paddingV10 paddingH10" style="float: right;">
-      {{this.getZPriTrunc()}} K : {{this.amp.impedanciaOut}}</ion-label>
-    <ion-label color="secondary" class="bigFont fontBold noMargin paddingV10 paddingH10" style="float: right;">
-      {{this.getIPriTrunc()}} mA</ion-label>
+
+    <ion-button class="botonesModo" size="outline" (click)="this.togglePageMode(this.FOTO)"
+      [color]="(this.modo === this.FOTO)?'primary':'secondary'">
+      <ion-icon name="camera" size="large" [color]="(this.modo === this.FOTO)?'primary':'secondary'">
+      </ion-icon>
+    </ion-button>
+
+
+
+    <span *ngIf="modo === this.CALCULAR_R">
+      <ion-label color="secondary" class="bigFont fontBold noMargin paddingV10 paddingH10" style="float: right;">
+        {{this.getZPriTrunc()}} K : {{this.amp.impedanciaOut}}</ion-label>
+      <ion-label color="secondary" class="bigFont fontBold noMargin paddingV10 paddingH10" style="float: right;">
+        {{this.getIPriTrunc()}} mA</ion-label>
+    </span>
+
 
   </div>
 </ion-header>
@@ -34,7 +46,7 @@
     <div class="graficImg">
       <img style="bottom: 0em;" src="assets/img/el84_600x400.png">
       <canvas class="grafic" baseChart [datasets]="chartData" [options]="chartOptions" [colors]="chartColors"
-        [legend]="showLegend" [chartType]="chartType"  >
+        [chartType]="chartType">
       </canvas>
     </div>
   </div>
@@ -142,13 +154,15 @@ this.amp.turn2
     <ion-badge tappable slot="end" [color]="(this.ziResult==true)? 'primary':'success'" class="badgeXXXX"
       (click)="badgeSelected('Zi')">
       <div class="inputBadge">
-        <ion-input type="number" class="noPadding noMargin bigFont" (ngModelChange)="this.onChangeZPRI()"
-          [(ngModel)]="this.amp.impedanciaIn"></ion-input>
+        <ion-input #inZPRI type="number" class="noPadding noMargin bigFont" (ngModelChange)="this.onChangeZPRI()"
+          [(ngModel)]="this.amp.impedanciaIn" (click)="onClickZPRI()"></ion-input>
       </div>
     </ion-badge>
     <!--     <ion-icon range-left name="arrow-dropdown-circle"></ion-icon>
     <ion-icon range-right name="arrow-circle"></ion-icon> -->
   </ion-range>
+
+
 
   <div class="mediumFont noMargin paddingT10" style="padding-left: 1.25em;">Altavoz:</div>
   <ion-segment [value]="this.amp.impedanciaOut" [(ngModel)]="this.amp.impedanciaOut" color="success"
@@ -179,7 +193,7 @@ this.amp.turn2
     </ion-badge>
   </ion-range>
 
-  <div class="mediumFont  noMargin paddingT10" style="padding-left: 1.25em;">Espiras Primario:</div>
+  <div class="mediumFont  noMargin  " style="padding-left: 1.25em;">Espiras Primario:</div>
   <ion-range type="range" min="1" max="2000" step="1" [color]="(this.t1Result==true)? 'primary':'secondary'"
     [(ngModel)]="this.amp.turn1" (ngModelChange)="this.onChangePRI()" class="paddingV1">
     <ion-badge tappable slot="end" [color]="(this.t1Result==true)? 'primary':'success'" class="badgeXXXX"
@@ -212,7 +226,7 @@ this.amp.turn2
 
 
 
-<ion-footer>
+<ion-footer *ngIf="!(this.modo===this.FOTO)">
 
   <!-- Voltaje primario: -->
 
@@ -261,31 +275,42 @@ this.amp.turn2
       </ion-badge>
     </div>
   </div>
-
-
 </ion-footer>
 
 
+<!-- *******************************************************   FOTO  ******************************************************* -->
+
+
+<ion-content *ngIf="modo === this.FOTO">
 
 
 
 
+  <div style="height: 100%; width: 100%; padding-bottom: 5em;">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" *ngFor="let image of this.arrFoto">
+          <img [src]="image"/>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <div *ngFor="let imagePath of this.arrFoto"
+           ion-col col-4 
+           [ngStyle]="{'background-image': 'url(' + imagePath + ')'}">
+      </div>
+    </ion-row>
+  </ion-grid>
 
 
-<!--  
 
-  <ion-item>
-    <ion-checkbox slot="start" checked></ion-checkbox>
-    <ion-label>Checkbox</ion-label>
-  </ion-item>
+</ion-content>
 
-  <div>
-    <ion-button (click)="calcular()" shape="round" color="warning">clientes</ion-button>
-  </div> -->
-
-
-
-
-<!-- <ion-buttons slot="start">
-  <ion-back-button defaultHref="home"></ion-back-button>
-</ion-buttons> -->
+<ion-fab *ngIf="this.modo===this.FOTO" horizontal="center" vertical="bottom" (click)="this.onClicKFoto()">
+  <ion-fab-button color="tertiary">
+    <ion-icon style="font-size: 20em" color="primary" name="aperture-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

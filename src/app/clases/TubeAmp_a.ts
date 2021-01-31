@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Helper } from './helper';
+import { Helper } from './Helper';
 
 
 
@@ -102,20 +102,16 @@ export class TubeAmpA {
 
     }
 
-    //            this.potenciaRms = (Math.pow(this.voltajeOutRms, 2));
-    //           this.voltajeOutRms = Math.sqrt(this.potenciaRms * this.impedanciaOut);
 
-
-
-
-    // ------------------------tensiones--------------------------
+    /**
+     * *******************************************************   tensiones  *******************************************************
+     */
     public setV(p: string, v: number) {
         switch (p) {
             case this.VI_PICO:
                 this.voltajeOutPp = this.voltajeInTns / this.relacionTrans;
                 this.voltajeOutRms = this.voltajeOutPp / Helper.RMS_FACTOR;
                 this.potenciaRms = (Math.pow(this.voltajeOutRms, 2) / this.impedanciaOut);
-
                 this.potenciaRms = this.helper.trunc(this.potenciaRms, 1);
                 this.voltajeOutPp = this.helper.trunc(this.voltajeOutPp, 1);
                 this.voltajeOutRms = this.helper.trunc(this.voltajeOutRms, 1);
@@ -133,7 +129,6 @@ export class TubeAmpA {
             default:
                 break;
         }
-        
     }
 
 
@@ -152,7 +147,6 @@ export class TubeAmpA {
         this.voltajeOutRms = Math.sqrt(res);
         this.voltajeOutPp = this.voltajeOutRms * Helper.RMS_FACTOR;
         this.voltajeInTns = this.voltajeOutPp * this.relacionTrans;
-
         this.voltajeOutRms = this.helper.trunc(this.voltajeOutRms, 1);
         this.voltajeOutPp = this.helper.trunc(this.voltajeOutPp, 1);
         this.voltajeInTns = this.helper.trunc(this.voltajeInTns, 1);

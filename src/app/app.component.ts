@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -9,8 +9,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
-  darkMode: boolean = true;
+export class AppComponent implements OnInit  {
+  darkMode = true;
 
 
   constructor(
@@ -27,7 +27,7 @@ export class AppComponent {
   async initializeApp() {
     try {
       const res = await this.platform.ready();
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
       this.darkMode = prefersDark.matches;
       this.setAppTheme(this.darkMode);
       this.statusBar.styleDefault();

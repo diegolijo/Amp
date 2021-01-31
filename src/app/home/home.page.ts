@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { TubeAmpA } from './../clases/TubeAmp_a';
-import { Helper } from '../clases/helper';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Color } from 'ng2-charts';
+// propias
+import { TubeAmpA } from './../clases/TubeAmp_a';
+import { Helper } from '../clases/Helper';
+import { Foto } from '../clases/Foto';
+
+
 
 @Component({
   selector: 'app-home',
@@ -18,8 +20,11 @@ export class HomePage implements OnInit {
     titulo: 'Tube calculator',
   };
 
-  public CALCULAR_V = 'V';
-  public CALCULAR_R = 'R';
+  @ViewChild('inZPRI') inZPRI;
+
+  public CALCULAR_V = 'CALCULAR_V';
+  public CALCULAR_R = 'CALCULAR_R';
+  public FOTO = 'FOTO';
 
 
   t1Result = true;
@@ -28,14 +33,20 @@ export class HomePage implements OnInit {
   ziResult = false;
   viResult = false;
 
-  public modo = this.CALCULAR_V;
+  public modo = this.FOTO;
 
   amp: TubeAmpA;
 
   // Chart Values //
   // Data
   chartData: ChartDataSets[] = [];
-
+  // tipo
+  chartType = 'line';
+  // colores
+  chartColors: Color[] = [
+    {
+      borderColor: '#fa6c2a',
+    }];
   // Options
   chartOptions = {
     responsive: true,
@@ -46,29 +57,48 @@ export class HomePage implements OnInit {
     pan: {
       enabled: true,
       mode: 'xy'
+    },
+    legend: {
+      display: false,
+    },
+    elements: {
+      line: {
+        fill: false,  // relleno fondo
+        borderWidth: 2,
+      },
     }
   };
-  chartColors: Color[] = [
-    {
-      borderColor: '#000000',
-      //  backgroundColor: ['#ff4961', '#ffd534', '#2fdf75']
-    }
-  ];
-  chartType = 'line';
-  showLegend = false;
-
-
+  base64Image: any;
+  CacheFoto64: any;
+  arrFoto: any[];
 
   constructor(
     public tubeAmp: TubeAmpA,
-    public helper: Helper
+    public helper: Helper,
+    public foto: Foto
   ) {
     this.amp = tubeAmp;
     document.body.setAttribute('color-theme', 'dark');
+
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+    this.base64Image = this.foto.base64Image;
+    await this.helper.getFotos(this.arrFoto);
+
+
   }
+
+
+  public setGrafica() {
+    this.chartData = [
+      { data: [{ x: 0, y: this.amp.intensidadIn }, { x: this.amp.voltajeInTns, y: 0 }] },
+      { data: [{ x: 0, y: 0.1 }] },
+      { data: [{ x: 600, y: 0 }] }
+    ];
+  }
+
 
   async ionViewWillEnter() {
     this.amp.setIi();
@@ -93,7 +123,7 @@ export class HomePage implements OnInit {
 
 
 
-  public togglePageMode(k: any) {
+  public async togglePageMode(k: any) {
     switch (k) {
       case this.CALCULAR_V:
         this.modo = this.CALCULAR_V;
@@ -101,6 +131,11 @@ export class HomePage implements OnInit {
         break;
       case this.CALCULAR_R:
         this.modo = this.CALCULAR_R;
+        break;
+      case this.FOTO:
+        this.modo = this.FOTO;
+        await this.helper.getDirectories();
+        await this.helper.getFotos(this.arrFoto);
         break;
       default:
         break;
@@ -310,6 +345,27 @@ export class HomePage implements OnInit {
     }
   }
 
+
+
+
+
+
+  public onClickZPRI(event: any) {
+
+    this.inZPRI.el.firstElementChild.select();
+    if (!this.inZPRI.el.firstElementChild.setSelect) {
+      // tslint:disable-next-line: no-string-literal
+      this.inZPRI.el.firstElementChild['setSelect'] = true;
+    } else {
+      // deseleccionar
+      this.inZPRI.setFocus();
+    }
+  }
+
+
+
+
+
   public onChangeRT() {
     if ((Number.isNaN(this.amp.relacionTrans)) || (this.amp.relacionTrans === 0) || this.amp.relacionTrans === null) {
       //   this.amp.relacionTrans = 0;
@@ -417,14 +473,23 @@ export class HomePage implements OnInit {
 
 
 
-  public setGrafica() {
-    this.chartData = [{
-      data: [{ x: 0, y: this.amp.intensidadIn }, { x: this.amp.voltajeInTns, y: 0 }]
-    }];
+  /**
+   * -----------------------------------------CAMARA  FOTO -------------------------------------------
+   */
 
+  public async onClicKFoto() {
+    this.CacheFoto64 = await this.foto.takeFoto();
   }
 
+
+  errorImagen(event) {
+    return event;
+  }
+
+
+
 }
+
 
 
 
